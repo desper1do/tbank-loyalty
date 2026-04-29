@@ -68,9 +68,9 @@ export default function UsersScreen({ onSelect }: Props) {
 }
 
 function segmentColor(seg: string) {
-  if (seg === "HIGH") return { backgroundColor: "#FFDD2D" };
-  if (seg === "MEDIUM") return { backgroundColor: "#FF8C00" };
-  return { backgroundColor: "#3A3A3C" };
+  if (seg === "HIGH") return { backgroundColor: "#22C55E" };
+  if (seg === "MEDIUM") return { backgroundColor: "#FFDD2D" };
+  return { backgroundColor: "#EF4444" };
 }
 
 const s = StyleSheet.create({

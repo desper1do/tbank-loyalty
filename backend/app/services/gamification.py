@@ -3,6 +3,7 @@
 Даша: этот файл твой — backend/app/services/gamification.py
 """
 from datetime import datetime
+import pandas as pd
 from app.services.data_loader import (
     users_df, accounts_df, loyalty_programs_df, loyalty_history_df
 )
@@ -45,7 +46,6 @@ def get_gamification_data(user_id: int) -> dict:
         else:
             check = datetime(current_period.year, current_period.month - 1, 1)
 
-        import pandas as pd
         for period in months_with_cashback:
             period_dt = period.to_timestamp()
             if period_dt.year == check.year and period_dt.month == check.month:
