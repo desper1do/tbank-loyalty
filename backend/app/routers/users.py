@@ -15,6 +15,8 @@ from app.models.schemas import (
 from app.services import data_loader as dl
 from app.services.gamification import get_gamification_data
 
+from app.models.schemas import OfferItem
+
 router = APIRouter()
 
 
@@ -37,22 +39,89 @@ def get_user(user_id: int):
 @router.get("/{user_id}/balances", response_model=list[BalanceItem])
 def get_user_balances(user_id: int):
     """Текущие балансы по всем программам лояльности пользователя."""
-    # TODO Данил: реализовать через join accounts + loyalty_programs
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    # Проверяем существование пользователя
+    if user_id not in dl.users_df["id"].values:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    user_accounts = dl.accounts_df[dl.accounts_df["user_id"] == user_id].copy()
+
+    if user_accounts.empty:
+        return []
+
+    # Джойним с программами лояльности
+    user_accounts = user_accounts.merge(
+        dl.loyalty_programs_df[["loyalty_program_id", "loyalty_program_name", "cashback_currency"]],
+        on="loyalty_program_id",
+        how="left"
+    )
+    # Формируем ответ
+    balances = []
+    for _, row in user_accounts.iterrows():
+        balances.append(
+            BalanceItem(
+                program_name=row["loyalty_program_name"],
+                currency=row["cashback_currency"],
+                current_balance=float(row["current_balance"])
+            )
+        )
+
+    return balances
 
 
 @router.get("/{user_id}/history", response_model=list[HistoryMonthItem])
 def get_user_history(user_id: int):
     """История начислений кэшбэка по месяцам (для графика)."""
-    # TODO Данил: агрегировать LoyaltyHistory по месяцам
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    if user_id not in dl.users_df["id"].values:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    user_accounts = dl.accounts_df[dl.accounts_df["user_id"] == user_id]
+
+    if user_accounts.empty:
+        return []
+
+    account_ids = user_accounts["account_id"].tolist()
+
+    # Фильтруем историю по аккаунтам
+    history = dl.loyalty_history_df[
+        dl.loyalty_history_df["account_id"].isin(account_ids)
+    ].copy()
+
+    if history.empty:
+        return []
+    history = history.merge(
+        user_accounts[["account_id", "loyalty_program_id"]],
+        on="account_id",
+        how="left"
+    )
+    history = history.merge(
+        dl.loyalty_programs_df[["loyalty_program_id", "loyalty_program_name"]],
+        on="loyalty_program_id",
+        how="left"
+    )
+
+    # Группируем по месяцу и программе
+    history["month"] = history["payout_date"].dt.to_period("M").astype(str)
+
+    grouped = history.groupby(["month", "loyalty_program_name"])["cashback_amount"].sum().reset_index()
+    grouped.columns = ["month", "program_name", "total_cashback"]
+    result = grouped.to_dict(orient="records")
+
+    return result
 
 
-@router.get("/{user_id}/offers", response_model=list)
+@router.get("/{user_id}/offers", response_model=list[OfferItem])
 def get_user_offers(user_id: int):
     """Акции партнёров для сегмента пользователя."""
-    # TODO Данил: фильтр Offers по financial_segment юзера
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    user_row = dl.users_df[dl.users_df["id"] == user_id]
+    if user_row.empty:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+
+    # Получаем сегмент пользователя
+    segment = user_row.iloc[0]["financial_segment"]
+
+    # Фильтруем офферы по сегменту
+    filtered_offers = dl.offers_df[dl.offers_df["financial_segment"] == segment].copy()
+    offers = filtered_offers.to_dict(orient="records")
+
+    return offers
 
 
 @router.get(
