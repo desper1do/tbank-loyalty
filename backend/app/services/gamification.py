@@ -37,9 +37,13 @@ def get_gamification_data(user_id: int) -> dict:
             .tolist()
         )
 
-        # Считаем streak: идём назад от текущего месяца
+        # Считаем streak: идём назад от последнего завершённого месяца
+        # (текущий месяц ещё не закончился, поэтому начинаем с предыдущего)
         current_period = datetime.now()
-        check = datetime(current_period.year, current_period.month, 1)
+        if current_period.month == 1:
+            check = datetime(current_period.year - 1, 12, 1)
+        else:
+            check = datetime(current_period.year, current_period.month - 1, 1)
 
         import pandas as pd
         for period in months_with_cashback:

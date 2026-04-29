@@ -79,20 +79,21 @@ def get_forecast(user_id: int) -> List[ForecastItem]:
             recent = acc_history[acc_history["month"].isin(lookback_periods)]
 
             if recent.empty:
-                monthly_totals = (
+                # Нет данных за последние 3 месяца — берём 3 последних доступных
+                all_monthly = (
                     acc_history.groupby("month")["cashback_amount"]
                     .sum()
+                    .sort_index()
                 )
+                last_3 = all_monthly.iloc[-3:]
+                avg_monthly = float(last_3.mean()) if not last_3.empty else 0.0
             else:
+                # Дополняем нулями месяцы без начислений, чтобы делитель всегда = 3
                 monthly_totals = (
                     recent.groupby("month")["cashback_amount"]
                     .sum()
+                    .reindex(lookback_periods, fill_value=0)
                 )
-
-            # Защита от NaN
-            if monthly_totals.empty or pd.isna(monthly_totals.mean()):
-                avg_monthly = 0.0
-            else:
                 avg_monthly = float(monthly_totals.mean())
 
         forecast_amount = round(avg_monthly * months_left, 2)
