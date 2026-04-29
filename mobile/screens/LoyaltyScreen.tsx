@@ -32,13 +32,17 @@ export default function LoyaltyScreen({ user, onBack }: Props) {
       fetchOffers(user.id),
       fetchGamification(user.id),
       fetchForecast(user.id),
-    ]).then(([b, o, g, f]) => {
-      setBalances(Array.isArray(b) ? b : []);
-      setOffers(Array.isArray(o) ? o : []);
-      setGamification(g);
-      setForecast(Array.isArray(f) ? f : []);
-      setLoading(false);
-    });
+    ])
+      .then(([b, o, g, f]) => {
+        setBalances(Array.isArray(b) ? b : []);
+        setOffers(Array.isArray(o) ? o : []);
+        setGamification(g);
+        setForecast(Array.isArray(f) ? f : []);
+      })
+      .catch(() => {
+        // При ошибке сети оставляем пустые массивы — приложение не крашится
+      })
+      .finally(() => setLoading(false));
   }, [user.id]);
 
   if (loading)

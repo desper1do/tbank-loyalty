@@ -1,4 +1,5 @@
-const API = "http://localhost:8000";
+// Android emulator: 10.0.2.2 | Real device/APK: замени на IP машины или deployed URL
+const API = "http://10.0.2.2:8000";
 
 export async function fetchUsers() {
   const r = await fetch(`${API}/users/`);

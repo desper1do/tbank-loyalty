@@ -23,7 +23,7 @@ const YELLOW = '#FFDD2D'
 const PROGRAM_CFG: Record<string, { color: string; bg: string; icon: string; label: string }> = {
   'Black':        { color: '#FFFFFF', bg: '#1A1A1A', icon: '₽', label: 'рублей' },
   'All Airlines': { color: '#FFFFFF', bg: '#1A56DB', icon: '✈', label: 'миль' },
-  'Platinum':     { color: '#000000', bg: YELLOW,    icon: '★', label: 'баллов' },
+  'Bravo':        { color: '#000000', bg: YELLOW,    icon: '★', label: 'баллов' },
 }
 
 const SEGMENT_CFG = {
