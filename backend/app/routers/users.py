@@ -8,6 +8,7 @@ from app.models.schemas import (
     HistoryMonthItem, ForecastItem, GamificationData, AIAdviceResponse
 )
 from app.services import data_loader as dl
+from app.services.gamification import get_gamification_data
 
 router = APIRouter()
 
@@ -59,8 +60,10 @@ def get_user_forecast(user_id: int):
 @router.get("/{user_id}/gamification", response_model=GamificationData)
 def get_user_gamification(user_id: int):
     """Геймификация: стрики, бейджи, прогресс — Даша реализует логику."""
-    # TODO Даша: логика в services/gamification.py
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    try:
+        return get_gamification_data(user_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @router.post("/{user_id}/ai-advice", response_model=AIAdviceResponse)
