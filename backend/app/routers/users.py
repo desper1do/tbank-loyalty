@@ -3,6 +3,11 @@
 Данил: реализуй логику в services/, здесь только маршруты.
 """
 from fastapi import APIRouter, HTTPException
+from typing import List
+from app.models.schemas import ForecastItem
+from app.services.forecast import get_forecast
+from app.services.data_loader import users_df
+
 from app.models.schemas import (
     UserShort, UserDetail, BalanceItem,
     HistoryMonthItem, ForecastItem, GamificationData, AIAdviceResponse
@@ -49,12 +54,37 @@ def get_user_offers(user_id: int):
     raise HTTPException(status_code=501, detail="Not implemented yet")
 
 
-@router.get("/{user_id}/forecast", response_model=list[ForecastItem])
+@router.get(
+    "/{user_id}/forecast",
+    response_model=List[ForecastItem],
+    summary="Прогноз кэшбэка до конца года",
+    description=(
+        "Возвращает прогнозируемую сумму кэшбэка по каждой программе лояльности "
+        "пользователя до конца текущего года. "
+        "Средний кэшбэк считается по последним 3 полным месяцам. "
+        "Если пользователь не найден — 404."
+    ),
+    tags=["users"],
+)
 def get_user_forecast(user_id: int):
-    """Прогноз кэшбэка до конца года — Данила реализует логику."""
-    # TODO Данила: средние за 3 месяца * оставшиеся месяцы
-    raise HTTPException(status_code=501, detail="Not implemented yet")
-
+    """
+    GET /users/{user_id}/forecast
+ 
+    Алгоритм:
+      - Проверяем существование пользователя.
+      - Для каждой программы лояльности: считаем avg за 3 месяца.
+      - months_left = 12 - текущий_месяц (не включая текущий).
+      - forecast_amount = avg_monthly * months_left.
+    """
+    # Проверка: существует ли пользователь
+    if user_id not in users_df["id"].values:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Пользователь с id={user_id} не найден",
+        )
+ 
+    forecast = get_forecast(user_id)
+    return forecast
 
 @router.get("/{user_id}/gamification", response_model=GamificationData)
 def get_user_gamification(user_id: int):

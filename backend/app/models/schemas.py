@@ -2,7 +2,7 @@
 Pydantic-схемы для всех ответов API.
 Данил: добавляй сюда новые схемы по мере необходимости.
 """
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
@@ -47,11 +47,44 @@ class HistoryMonthItem(BaseModel):
 # --- Прогноз ---
 
 class ForecastItem(BaseModel):
-    program_name: str
-    currency: str
-    avg_monthly: float
-    months_left: int
-    forecast_amount: float   # avg_monthly * months_left
+    """Прогноз накоплений по одной программе лояльности до конца года."""
+ 
+    program_name: str = Field(
+        ...,
+        description="Название программы лояльности (Black / All Airlines / Platinum)",
+        examples=["Black"],
+    )
+    currency: str = Field(
+        ...,
+        description="Единица кэшбэка: rub / miles / bravo",
+        examples=["rub"],
+    )
+    avg_monthly: float = Field(
+        ...,
+        description="Средний кэшбэк за последние 3 месяца",
+        examples=[3200.0],
+    )
+    months_left: int = Field(
+        ...,
+        description="Количество полных месяцев до конца текущего года",
+        examples=[8],
+    )
+    forecast_amount: float = Field(
+        ...,
+        description="Прогнозируемая сумма кэшбэка: avg_monthly × months_left",
+        examples=[25600.0],
+    )
+ 
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "program_name": "Black",
+                "currency": "rub",
+                "avg_monthly": 3200.0,
+                "months_left": 8,
+                "forecast_amount": 25600.0,
+            }
+        }
 
 
 # --- Офферы ---
