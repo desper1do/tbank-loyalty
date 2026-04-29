@@ -30,6 +30,28 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Глобальный переход для плавной смены темы на ВСЕХ элементах.
+   Исключаем только анимации и трансформы чтобы не тормозить hover-эффекты. */
+*, *::before, *::after {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
+}
+
+/* Но hover/transform не должны быть медленными */
+button, a, [role="button"] {
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease,
+    transform 0.15s ease !important;
+}
+
 body {
   font-family: Inter, system-ui, -apple-system, sans-serif;
   background-color: var(--bg-primary);

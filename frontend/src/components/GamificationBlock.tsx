@@ -99,7 +99,7 @@ export default function GamificationBlock({ userId }: Props) {
         <p style={{ fontSize: 11, color: "var(--text-secondary)", marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.06em" }}>
           Бейджи
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
           {data.badges.map((badge) => (
             <div
               key={badge.id}
@@ -107,21 +107,25 @@ export default function GamificationBlock({ userId }: Props) {
               style={{
                 display: "flex", flexDirection: "column",
                 alignItems: "center", justifyContent: "center",
-                borderRadius: 14, width: 64, height: 64,
-                fontSize: 24, transition: "all 0.2s",
+                borderRadius: 16,
+                // Фиксированная ширина и минимальная высота — текст не обрезается
+                width: 100, minHeight: 108, padding: "10px 6px",
+                fontSize: 28, transition: "all 0.2s",
                 backgroundColor: badge.earned ? "#FFDD2D" : "var(--bg-primary)",
-                opacity: badge.earned ? 1 : 0.4,
+                opacity: badge.earned ? 1 : 0.45,
                 filter: badge.earned ? "none" : "grayscale(1)",
-                boxShadow: badge.earned ? "0 2px 8px rgba(255,221,45,0.4)" : "none",
+                boxShadow: badge.earned ? "0 3px 10px rgba(255,221,45,0.45)" : "none",
+                cursor: "default",
               }}
             >
-              <span>{badge.icon}</span>
+              <span style={{ lineHeight: 1 }}>{badge.icon}</span>
               <span style={{
-                fontSize: 9, marginTop: 2, fontWeight: 500, textAlign: "center",
-                padding: "0 4px", lineHeight: 1.2,
+                // Убираем однострочный обрез — позволяем переносить текст
+                fontSize: 10, marginTop: 6, fontWeight: 600, textAlign: "center",
+                lineHeight: 1.25, width: "100%",
                 color: badge.earned ? "#000" : "var(--text-secondary)",
-                overflow: "hidden", display: "-webkit-box",
-                WebkitLineClamp: 1, WebkitBoxOrient: "vertical",
+                wordBreak: "break-word",
+                hyphens: "auto" as const,
               }}>
                 {badge.title}
               </span>

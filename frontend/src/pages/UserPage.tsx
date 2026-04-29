@@ -16,6 +16,7 @@ import {
 } from '../api/index'
 import { useTheme } from '../hooks/useTheme'
 import GamificationBlock from '../components/GamificationBlock'
+import CrossSellBlock from '../components/CrossSellBlock'
 
 // ─── Константы ──────────────────────────────────────────────
 const YELLOW = '#FFDD2D'
@@ -142,8 +143,10 @@ function BalancesWidget({ userId }: { userId: number }) {
               <div key={item.program_name} style={{
                 backgroundColor: cfg.bg, borderRadius: 16,
                 padding: 16, display: 'flex', flexDirection: 'column', gap: 4,
+                // Явно задаём цвет текста для карточки чтобы не наследовать от body
+                color: cfg.color,
               }}>
-                <span style={{ fontSize: 22 }}>{cfg.icon}</span>
+                <span style={{ fontSize: 22, color: cfg.color, lineHeight: 1 }}>{cfg.icon}</span>
                 <p style={{ fontSize: 11, color: cfg.color, opacity: 0.8, fontWeight: 500 }}>{item.program_name}</p>
                 <p style={{ fontSize: 22, fontWeight: 900, color: cfg.color, letterSpacing: '-0.5px' }}>
                   {item.current_balance.toLocaleString('ru-RU', { maximumFractionDigits: 0 })}
@@ -459,6 +462,17 @@ export default function UserPage() {
         <HistoryWidget userId={userId} />
         <ForecastWidget userId={userId} />
         <OffersWidget userId={userId} />
+        {/* Виджет 8 — Кросс-селл продуктов экосистемы Т (между офферами и геймификацией) */}
+        {user && (
+          <div style={{
+            backgroundColor: 'var(--bg-card)',
+            borderRadius: 20,
+            boxShadow: 'var(--shadow)',
+            overflow: 'hidden',
+          }}>
+            <CrossSellBlock segment={user.financial_segment} />
+          </div>
+        )}
         {/* Оборачиваем в нашу Card, чтобы стили совпадали с остальными виджетами */}
         <div style={{
           backgroundColor: 'var(--bg-card)',
