@@ -7,6 +7,7 @@ from typing import List
 from app.models.schemas import ForecastItem
 from app.services.forecast import get_forecast
 from app.services.data_loader import users_df
+from app.services.ai_advisor import get_ai_advice as generate_ai_advice
 
 from app.models.schemas import (
     UserShort, UserDetail, BalanceItem,
@@ -98,6 +99,20 @@ def get_user_gamification(user_id: int):
 
 @router.post("/{user_id}/ai-advice", response_model=AIAdviceResponse)
 def get_ai_advice(user_id: int):
-    """ИИ-совет по профилю пользователя — Данила реализует."""
-    # TODO Данила: вызов OpenAI/Anthropic API
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    """
+    Генерирует ИИ-совет по профилю пользователя с помощью GigaChat.
+    """
+    # Проверка: существует ли пользователь
+    if user_id not in users_df["id"].values:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Пользователь с id={user_id} не найден",
+        )
+    
+    try:
+        advice_text = generate_ai_advice(user_id)
+        return AIAdviceResponse(advice=advice_text)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Внутренняя ошибка: {str(e)}")
