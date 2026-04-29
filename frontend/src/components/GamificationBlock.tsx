@@ -50,7 +50,7 @@ export default function GamificationBlock({ userId }: Props) {
   // --- Скелетон ---
   if (loading) {
     return (
-      <div className="rounded-2xl bg-white dark:bg-zinc-900 p-5 shadow animate-pulse">
+      <div className="animate-pulse" style={{padding: 20}}>
         <div className="h-5 w-40 bg-zinc-200 dark:bg-zinc-700 rounded mb-4" />
         <div className="flex gap-3 mb-5">
           {[...Array(5)].map((_, i) => (
@@ -65,14 +65,14 @@ export default function GamificationBlock({ userId }: Props) {
   // --- Ошибка ---
   if (error || !data) {
     return (
-      <div className="rounded-2xl bg-white dark:bg-zinc-900 p-5 shadow text-red-500 text-sm">
+      <div style={{padding: 20, color: "#EF4444", fontSize: 13}}>
         Не удалось загрузить геймификацию: {error}
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl bg-white dark:bg-zinc-900 p-5 shadow space-y-5">
+    <div style={{padding: 20, display: "flex", flexDirection: "column", gap: 20}}>
       {/* Заголовок */}
       <h2 className="text-lg font-bold text-zinc-900 dark:text-white">
         Достижения

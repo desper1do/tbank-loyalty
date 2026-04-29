@@ -1,34 +1,33 @@
 @import "tailwindcss";
 
+/* Tailwind v4: включаем dark mode через класс .dark на <html> */
+@variant dark (&:where(.dark, .dark *));
+
 /* =============================================
    T-Bank Design Tokens
    ============================================= */
 :root {
   --tbank-yellow: #FFDD2D;
-  --tbank-black: #000000;
-  --tbank-white: #FFFFFF;
 
-  --bg-primary: #F5F5F5;
+  --bg-primary: #F2F3F5;
   --bg-card: #FFFFFF;
-  --bg-card-hover: #F0F0F0;
+  --bg-card-hover: #F5F5F5;
   --text-primary: #000000;
   --text-secondary: #6B7280;
   --border-color: #E5E7EB;
-  --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
 }
 
-/* Dark theme */
 .dark {
-  --bg-primary: #0F0F0F;
-  --bg-card: #1A1A1A;
-  --bg-card-hover: #242424;
+  --bg-primary: #111113;
+  --bg-card: #1C1C1E;
+  --bg-card-hover: #2C2C2E;
   --text-primary: #FFFFFF;
-  --text-secondary: #9CA3AF;
-  --border-color: #2D2D2D;
-  --shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  --text-secondary: #8E8E93;
+  --border-color: #2C2C2E;
+  --shadow: 0 1px 4px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
 }
 
-/* Base */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -39,12 +38,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
 
-/* Skeleton animation */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
