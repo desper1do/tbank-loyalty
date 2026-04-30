@@ -9,6 +9,7 @@ services:
       - ./backend:/backend
     environment:
       - PYTHONPATH=/backend
+      - GIGACHAT_CREDENTIALS=${GIGACHAT_CREDENTIALS}
 
   frontend:
     build: ./frontend

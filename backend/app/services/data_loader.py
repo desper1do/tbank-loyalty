@@ -11,7 +11,7 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 
 def _load(filename: str) -> pd.DataFrame:
     path = os.path.join(DATA_DIR, filename)
-    return pd.read_csv(path)
+    return pd.read_csv(path, encoding='utf-8-sig')  # utf-8-sig strips BOM if present
 
 
 # Глобальные датафреймы — импортируй их в сервисах

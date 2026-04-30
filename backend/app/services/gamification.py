@@ -10,6 +10,10 @@ from app.services.data_loader import (
 
 
 def get_gamification_data(user_id: int) -> dict:
+    """
+    Возвращает данные геймификации для пользователя: стрик, бейджи и прогресс до следующего уровня.
+    Стрик считается по последним непрерывным месяцам с начислениями.
+    """
     # --- Данные пользователя ---
     user_row = users_df[users_df["id"] == user_id]
     if user_row.empty:

@@ -1,3 +1,4 @@
+import re
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
@@ -89,6 +90,30 @@ def test_gamification_returns_data():
         assert "id" in badge
         assert "title" in badge
         assert "earned" in badge
+
+def test_offers_have_required_fields():
+    """Каждый оффер содержит поля partner_name и cashback_percent."""
+    response = client.get("/users/1/offers")
+    assert response.status_code == 200
+    for offer in response.json():
+        assert "partner_name" in offer
+        assert "cashback_percent" in offer
+        assert isinstance(offer["cashback_percent"], (int, float))
+
+def test_gamification_has_streak():
+    """Поле streak_months — неотрицательное целое число."""
+    response = client.get("/users/1/gamification")
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data["streak_months"], int)
+    assert data["streak_months"] >= 0
+
+def test_history_month_format():
+    """Поле month в истории соответствует формату YYYY-MM."""
+    response = client.get("/users/1/history")
+    assert response.status_code == 200
+    for item in response.json():
+        assert re.match(r"^\d{4}-\d{2}$", item["month"]), f"Неверный формат: {item['month']}"
 
 def test_health_check():
     """Проверка health эндпоинта"""

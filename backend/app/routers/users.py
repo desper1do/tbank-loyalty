@@ -4,7 +4,6 @@
 """
 from fastapi import APIRouter, HTTPException
 from typing import List
-from app.models.schemas import ForecastItem
 from app.services.forecast import get_forecast
 from app.services.data_loader import users_df
 from app.services.ai_advisor import get_ai_advice as generate_ai_advice
