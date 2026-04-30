@@ -137,13 +137,19 @@ function BalancesWidget({ userId }: { userId: number }) {
       )}
       {error && <ErrorMsg msg={error} />}
       {!loading && !error && (
-        /* minmax(8.75rem, 1fr) = minmax(140px, 1fr) — на узких экранах
-           переходит в одну колонку автоматически */
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(8.75rem, 1fr))', gap: '0.625rem' }}>
+        <>
+          <style>{`
+            .bonuses-grid::-webkit-scrollbar { display: none; }
+            @media (max-width: 480px) {
+              .bonuses-grid { display: flex !important; flex-direction: row; overflow-x: auto; scrollbar-width: none; }
+              .bonus-card   { flex-shrink: 0; }
+            }
+          `}</style>
+        <div className="bonuses-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(8.75rem, 1fr))', gap: '0.625rem' }}>
           {data.map(item => {
             const cfg = PROGRAM_CFG[item.program_name] ?? { color: '#fff', bg: '#555', icon: '◆', label: item.currency }
             return (
-              <div key={item.program_name} style={{
+              <div key={item.program_name} className="bonus-card" style={{
                 backgroundColor: cfg.bg, borderRadius: '1rem',
                 padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem',
                 color: cfg.color,
@@ -158,6 +164,7 @@ function BalancesWidget({ userId }: { userId: number }) {
             )
           })}
         </div>
+        </>
       )}
     </Card>
   )

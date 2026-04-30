@@ -3,17 +3,18 @@ import {
   ActivityIndicator, SafeAreaView, ScrollView,
   StyleSheet, Text, TouchableOpacity, View,
 } from "react-native";
-import { fetchBalances, fetchForecast, fetchGamification, fetchOffers } from "../api";
+import { fetchAIAdvice, fetchBalances, fetchForecast, fetchGamification, fetchHistory, fetchOffers } from "../api";
+import CrossSellBlock from "../components/CrossSellBlock";
 import ForecastBlock from "../components/ForecastBlock";
 import GamificationBlock from "../components/GamificationBlock.native";
-import { Balance, ForecastItem, Gamification, Offer, User } from "../types";
+import HistoryChart from "../components/HistoryChart";
+import { Balance, ForecastItem, Gamification, HistoryMonthItem, Offer, User } from "../types";
 
 interface Props {
   user: User;
   onBack: () => void;
 }
 
-// Совпадает с PROGRAM_CFG у Ники
 const PROGRAM_CFG: Record<string, { bg: string; icon: string; label: string; textColor: string }> = {
   "Black":        { bg: "#1A1A1A", icon: "₽", label: "рублей",  textColor: "#FFF" },
   "All Airlines": { bg: "#1A56DB", icon: "✈", label: "миль",    textColor: "#FFF" },
@@ -27,28 +28,45 @@ const SEGMENT_CFG: Record<string, { bg: string; color: string }> = {
 };
 
 export default function LoyaltyScreen({ user, onBack }: Props) {
-  const [balances, setBalances] = useState<Balance[]>([]);
-  const [offers, setOffers] = useState<Offer[]>([]);
+  const [balances, setBalances]       = useState<Balance[]>([]);
+  const [history, setHistory]         = useState<HistoryMonthItem[]>([]);
+  const [forecast, setForecast]       = useState<ForecastItem[]>([]);
+  const [offers, setOffers]           = useState<Offer[]>([]);
   const [gamification, setGamification] = useState<Gamification | null>(null);
-  const [forecast, setForecast] = useState<ForecastItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading]         = useState(true);
+
+  const [advice, setAdvice]           = useState<string | null>(null);
+  const [adviceLoading, setAdviceLoading] = useState(false);
+  const [adviceError, setAdviceError] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([
       fetchBalances(user.id),
+      fetchHistory(user.id),
+      fetchForecast(user.id),
       fetchOffers(user.id),
       fetchGamification(user.id),
-      fetchForecast(user.id),
     ])
-      .then(([b, o, g, f]) => {
+      .then(([b, h, f, o, g]) => {
         setBalances(Array.isArray(b) ? b : []);
+        setHistory(Array.isArray(h) ? h : []);
+        setForecast(Array.isArray(f) ? f : []);
         setOffers(Array.isArray(o) ? o : []);
         setGamification(g);
-        setForecast(Array.isArray(f) ? f : []);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [user.id]);
+
+  const requestAdvice = (refresh = false) => {
+    if (adviceLoading) return;
+    setAdviceLoading(true);
+    setAdviceError(null);
+    fetchAIAdvice(user.id, refresh)
+      .then(setAdvice)
+      .catch((e: Error) => setAdviceError(e.message))
+      .finally(() => setAdviceLoading(false));
+  };
 
   const seg = SEGMENT_CFG[user.financial_segment] ?? SEGMENT_CFG.LOW;
   const initials = user.full_name.split(" ").slice(0, 2).map(w => w[0]).join("");
@@ -74,7 +92,7 @@ export default function LoyaltyScreen({ user, onBack }: Props) {
 
       <ScrollView contentContainerStyle={s.scroll}>
 
-        {/* Профиль */}
+        {/* 1. Профиль */}
         <View style={s.card}>
           <View style={s.profileRow}>
             <View style={s.avatar}>
@@ -90,14 +108,14 @@ export default function LoyaltyScreen({ user, onBack }: Props) {
           </View>
         </View>
 
-        {/* Балансы */}
+        {/* 2. Балансы */}
         <View style={s.card}>
           <Text style={s.sectionTitle}>Мои бонусы</Text>
           {balances.length === 0 ? (
-            <Text style={s.empty}>Данные загружаются...</Text>
+            <Text style={s.empty}>Нет данных</Text>
           ) : (
             <View style={s.balancesGrid}>
-              {balances.map((b) => {
+              {balances.map(b => {
                 const cfg = PROGRAM_CFG[b.program_name] ?? { bg: "#333", icon: "◆", label: b.currency, textColor: "#FFF" };
                 return (
                   <View key={b.program_name} style={[s.balanceCard, { backgroundColor: cfg.bg }]}>
@@ -114,7 +132,13 @@ export default function LoyaltyScreen({ user, onBack }: Props) {
           )}
         </View>
 
-        {/* Прогноз */}
+        {/* 3. История кэшбэка */}
+        <View style={s.card}>
+          <Text style={s.sectionTitle}>История кэшбэка</Text>
+          <HistoryChart data={history} />
+        </View>
+
+        {/* 4. Прогноз */}
         {forecast.length > 0 && (
           <View style={s.card}>
             <Text style={s.sectionTitle}>Прогноз до конца года</Text>
@@ -122,22 +146,14 @@ export default function LoyaltyScreen({ user, onBack }: Props) {
           </View>
         )}
 
-        {/* Геймификация */}
-        {gamification && (
-          <View style={s.card}>
-            <Text style={s.sectionTitle}>Достижения</Text>
-            <GamificationBlock data={gamification} />
-          </View>
-        )}
-
-        {/* Офферы */}
+        {/* 5. Акции партнёров */}
         <View style={s.card}>
           <Text style={s.sectionTitle}>Акции партнёров</Text>
           {offers.length === 0 ? (
-            <Text style={s.empty}>Данные загружаются...</Text>
+            <Text style={s.empty}>Нет данных</Text>
           ) : (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -4 }}>
-              {offers.slice(0, 6).map((o) => (
+              {offers.map(o => (
                 <View
                   key={o.partner_id}
                   style={[s.offerCard, { backgroundColor: o.brand_color_hex || "#1C1C1E" }]}
@@ -151,6 +167,56 @@ export default function LoyaltyScreen({ user, onBack }: Props) {
                 </View>
               ))}
             </ScrollView>
+          )}
+        </View>
+
+        {/* 6. Продукты экосистемы Т (кросс-селл) */}
+        <View style={s.card}>
+          <Text style={s.sectionTitle}>Продукты экосистемы Т</Text>
+          <CrossSellBlock segment={user.financial_segment} />
+        </View>
+
+        {/* 7. Геймификация */}
+        {gamification && (
+          <View style={s.card}>
+            <Text style={s.sectionTitle}>Достижения</Text>
+            <GamificationBlock data={gamification} />
+          </View>
+        )}
+
+        {/* 8. ИИ-советник */}
+        <View style={s.card}>
+          <Text style={s.sectionTitle}>ИИ-советник</Text>
+
+          {!advice && !adviceLoading && (
+            <TouchableOpacity style={s.aiButton} onPress={() => requestAdvice()} activeOpacity={0.8}>
+              <Text style={s.aiButtonText}>✦ Получить персональный совет</Text>
+            </TouchableOpacity>
+          )}
+
+          {adviceLoading && (
+            <View style={s.aiLoader}>
+              <ActivityIndicator size="small" color="#FFDD2D" />
+              <Text style={s.aiLoaderText}>Анализирую профиль...</Text>
+            </View>
+          )}
+
+          {adviceError && !adviceLoading && (
+            <Text style={s.aiError}>Не удалось получить совет: {adviceError}</Text>
+          )}
+
+          {advice && !adviceLoading && (
+            <View>
+              <View style={s.adviceBox}>
+                <View style={s.adviceIcon}>
+                  <Text style={{ fontSize: 14 }}>✦</Text>
+                </View>
+                <Text style={s.adviceText}>{advice}</Text>
+              </View>
+              <TouchableOpacity onPress={() => requestAdvice(true)} disabled={adviceLoading} style={{ marginTop: 12 }}>
+                <Text style={s.refreshText}>Обновить совет</Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
 
@@ -180,6 +246,7 @@ const s = StyleSheet.create({
   scroll: { padding: 16, gap: 12 },
   card: { backgroundColor: "#1C1C1E", borderRadius: 20, padding: 18 },
   sectionTitle: { color: "#FFF", fontSize: 16, fontWeight: "700", marginBottom: 14, letterSpacing: -0.3 },
+  empty: { color: "#555", fontSize: 14 },
 
   // Профиль
   profileRow: { flexDirection: "row", alignItems: "center", gap: 14 },
@@ -212,5 +279,25 @@ const s = StyleSheet.create({
   },
   cashbackText: { color: "#FFF", fontSize: 14, fontWeight: "900" },
   cashbackLabel: { color: "rgba(255,255,255,0.8)", fontSize: 11 },
-  empty: { color: "#555", fontSize: 14 },
+
+  // ИИ-советник
+  aiButton: {
+    backgroundColor: "#FFDD2D", borderRadius: 14,
+    paddingVertical: 14, alignItems: "center",
+  },
+  aiButtonText: { color: "#000", fontSize: 14, fontWeight: "700" },
+  aiLoader: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 8 },
+  aiLoaderText: { color: "#8E8E93", fontSize: 14 },
+  aiError: { color: "#FF453A", fontSize: 13, marginTop: 4 },
+  adviceBox: {
+    flexDirection: "row", gap: 12, alignItems: "flex-start",
+    backgroundColor: "#111113", borderRadius: 14,
+    padding: 14, borderWidth: 1, borderColor: "#2C2C2E",
+  },
+  adviceIcon: {
+    width: 32, height: 32, borderRadius: 10,
+    backgroundColor: "#FFDD2D", justifyContent: "center", alignItems: "center", flexShrink: 0,
+  },
+  adviceText: { color: "#FFF", fontSize: 14, lineHeight: 22, flex: 1 },
+  refreshText: { color: "#8E8E93", fontSize: 12, textAlign: "center" },
 });

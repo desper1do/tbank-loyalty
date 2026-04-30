@@ -41,3 +41,9 @@ export interface ForecastItem {
   months_left: number;
   forecast_amount: number;
 }
+
+export interface HistoryMonthItem {
+  month: string;
+  program_name: string;
+  total_cashback: number;
+}

@@ -30,3 +30,19 @@ export async function fetchForecast(userId: number) {
   if (!r.ok) return [];
   return r.json();
 }
+
+export async function fetchHistory(userId: number) {
+  const r = await fetch(`${API}/users/${userId}/history`);
+  if (!r.ok) return [];
+  return r.json();
+}
+
+export async function fetchAIAdvice(userId: number, refresh = false): Promise<string> {
+  const url = refresh
+    ? `${API}/users/${userId}/ai-advice?refresh=true`
+    : `${API}/users/${userId}/ai-advice`;
+  const r = await fetch(url, { method: "POST" });
+  if (!r.ok) throw new Error(`Ошибка ${r.status}`);
+  const data = await r.json();
+  return data.advice as string;
+}
