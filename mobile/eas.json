@@ -8,7 +8,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://tbank-loyalty.desp-dev.ru/api"
+        "EXPO_PUBLIC_API_URL": "http://111.88.144.155:8000"
       }
     },
     "production": {
@@ -16,7 +16,7 @@
         "buildType": "app-bundle"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://tbank-loyalty.desp-dev.ru/api"
+        "EXPO_PUBLIC_API_URL": "http://111.88.144.155:8000"
       }
     }
   }
