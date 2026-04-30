@@ -2,6 +2,8 @@
  * Компонент геймификации — стрики, бейджи, прогресс.
  * Даша: frontend/src/components/GamificationBlock.tsx
  * Ника: просто <GamificationBlock userId={id} /> в UserPage
+ *
+ * Все размеры в rem/em — адаптируется под системный шрифт пользователя.
  */
 import { useEffect, useState } from "react";
 
@@ -49,14 +51,14 @@ export default function GamificationBlock({ userId }: Props) {
   // --- Скелетон ---
   if (loading) {
     return (
-      <div style={{ padding: 20 }}>
-        <div className="skeleton" style={{ height: 20, width: 160, borderRadius: 6, marginBottom: 16 }} />
-        <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
+      <div style={{ padding: "1.25rem" }}>
+        <div className="skeleton" style={{ height: "1.25rem", width: "10rem", borderRadius: "0.375rem", marginBottom: "1rem" }} />
+        <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.25rem" }}>
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="skeleton" style={{ height: 56, width: 56, borderRadius: 12 }} />
+            <div key={i} className="skeleton" style={{ height: "3.5rem", width: "3.5rem", borderRadius: "0.75rem" }} />
           ))}
         </div>
-        <div className="skeleton" style={{ height: 12, width: "100%", borderRadius: 6 }} />
+        <div className="skeleton" style={{ height: "0.75rem", width: "100%", borderRadius: "0.375rem" }} />
       </div>
     );
   }
@@ -64,31 +66,31 @@ export default function GamificationBlock({ userId }: Props) {
   // --- Ошибка ---
   if (error || !data) {
     return (
-      <div style={{ padding: 20, color: "#EF4444", fontSize: 13 }}>
+      <div style={{ padding: "1.25rem", color: "#EF4444", fontSize: "0.8125rem" }}>
         Не удалось загрузить геймификацию: {error}
       </div>
     );
   }
 
   return (
-    <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 20 }}>
+    <div style={{ padding: "1.25rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
       {/* Заголовок */}
-      <p style={{ fontWeight: 700, fontSize: 17, color: "var(--text-primary)", letterSpacing: "-0.3px" }}>
+      <p style={{ fontWeight: 700, fontSize: "1.25rem", color: "var(--text-primary)", letterSpacing: "-0.3px" }}>
         Достижения
       </p>
 
       {/* Стрик */}
       <div style={{
-        display: "flex", alignItems: "center", gap: 12,
+        display: "flex", alignItems: "center", gap: "0.75rem",
         backgroundColor: "rgba(255, 221, 45, 0.12)",
-        borderRadius: 14, padding: "12px 16px",
+        borderRadius: "0.875rem", padding: "0.75rem 1rem",
       }}>
-        <span style={{ fontSize: 24 }}>🔥</span>
+        <span style={{ fontSize: "1.5rem" }}>🔥</span>
         <div>
-          <p style={{ fontWeight: 600, fontSize: 14, color: "var(--text-primary)" }}>
+          <p style={{ fontWeight: 600, fontSize: "0.875rem", color: "var(--text-primary)" }}>
             Стрик: {data.streak_months} {pluralMonths(data.streak_months)} подряд
           </p>
-          <p style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 2 }}>
+          <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "0.125rem" }}>
             Продолжайте пользоваться картой каждый месяц
           </p>
         </div>
@@ -96,10 +98,10 @@ export default function GamificationBlock({ userId }: Props) {
 
       {/* Бейджи */}
       <div>
-        <p style={{ fontSize: 11, color: "var(--text-secondary)", marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+        <p style={{ fontSize: "0.6875rem", color: "var(--text-secondary)", marginBottom: "0.75rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
           Бейджи
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.625rem" }}>
           {data.badges.map((badge) => (
             <div
               key={badge.id}
@@ -107,10 +109,10 @@ export default function GamificationBlock({ userId }: Props) {
               style={{
                 display: "flex", flexDirection: "column",
                 alignItems: "center", justifyContent: "center",
-                borderRadius: 16,
-                // Фиксированная ширина и минимальная высота — текст не обрезается
-                width: 100, minHeight: 108, padding: "10px 6px",
-                fontSize: 28, transition: "all 0.2s",
+                borderRadius: "1rem",
+                /* rem вместо px — масштабируется со шрифтом */
+                width: "5rem", minHeight: "5.5rem", padding: "0.625rem 0.375rem",
+                fontSize: "1.75rem",
                 backgroundColor: badge.earned ? "#FFDD2D" : "var(--bg-primary)",
                 opacity: badge.earned ? 1 : 0.45,
                 filter: badge.earned ? "none" : "grayscale(1)",
@@ -120,8 +122,7 @@ export default function GamificationBlock({ userId }: Props) {
             >
               <span style={{ lineHeight: 1 }}>{badge.icon}</span>
               <span style={{
-                // Убираем однострочный обрез — позволяем переносить текст
-                fontSize: 10, marginTop: 6, fontWeight: 600, textAlign: "center",
+                fontSize: "0.625rem", marginTop: "0.375rem", fontWeight: 600, textAlign: "center",
                 lineHeight: 1.25, width: "100%",
                 color: badge.earned ? "#000" : "var(--text-secondary)",
                 wordBreak: "break-word",
@@ -137,16 +138,16 @@ export default function GamificationBlock({ userId }: Props) {
       {/* Прогресс до следующего уровня */}
       {data.next_level !== null && data.progress_percent !== null && (
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "var(--text-secondary)", marginBottom: 6 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "var(--text-secondary)", marginBottom: "0.375rem" }}>
             <span>Прогресс до уровня {data.next_level}</span>
             <span>{data.progress_percent}%</span>
           </div>
           <div style={{
             width: "100%", backgroundColor: "var(--border-color)",
-            borderRadius: 99, height: 10, overflow: "hidden",
+            borderRadius: "99px", height: "0.625rem", overflow: "hidden",
           }}>
             <div style={{
-              height: 10, borderRadius: 99,
+              height: "0.625rem", borderRadius: "99px",
               backgroundColor: "#FFDD2D",
               width: `${data.progress_percent}%`,
               transition: "width 0.7s ease",
@@ -157,7 +158,7 @@ export default function GamificationBlock({ userId }: Props) {
 
       {/* Уже максимум */}
       {data.next_level === null && (
-        <p style={{ fontSize: 14, fontWeight: 600, color: "#FFDD2D" }}>
+        <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "#FFDD2D" }}>
           👑 Вы на максимальном уровне HIGH
         </p>
       )}

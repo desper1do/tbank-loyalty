@@ -62,9 +62,9 @@ function WidgetTitle({ children }: { children: React.ReactNode }) {
   return (
     <p style={{
       fontWeight: 700,
-      fontSize: 17,
+      fontSize: '1.25rem',   /* ~20px — крупнее, чем было 17px */
       color: 'var(--text-primary)',
-      marginBottom: 16,
+      marginBottom: '1rem',
       letterSpacing: '-0.3px',
     }}>
       {children}
@@ -86,27 +86,27 @@ function ProfileWidget({ user }: { user: User }) {
   const seg = SEGMENT_CFG[user.financial_segment as keyof typeof SEGMENT_CFG]
   return (
     <Card>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        {/* Аватар */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        {/* Аватар — размер через em, масштабируется со шрифтом */}
         <div style={{
-          width: 60, height: 60, borderRadius: 30,
+          width: '3.75rem', height: '3.75rem', borderRadius: '50%',
           backgroundColor: YELLOW, display: 'flex',
           alignItems: 'center', justifyContent: 'center', flexShrink: 0,
         }}>
-          <span style={{ fontWeight: 900, fontSize: 20, color: '#000' }}>{initials}</span>
+          <span style={{ fontWeight: 900, fontSize: '1.25rem', color: '#000' }}>{initials}</span>
         </div>
         {/* Инфо */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', letterSpacing: '-0.4px', marginBottom: 2 }}>
+          <p style={{ fontWeight: 700, fontSize: '1.125rem', color: 'var(--text-primary)', letterSpacing: '-0.4px', marginBottom: '0.125rem' }}>
             {user.full_name}
           </p>
-          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {user.phone_number} · {user.email}
           </p>
           <span style={{
-            fontSize: 11, fontWeight: 700,
+            fontSize: '0.6875rem', fontWeight: 700,
             backgroundColor: seg.bg, color: seg.color,
-            padding: '2px 10px', borderRadius: 20,
+            padding: '0.125rem 0.625rem', borderRadius: '1.25rem',
           }}>
             {user.financial_segment}
           </span>
@@ -136,22 +136,23 @@ function BalancesWidget({ userId }: { userId: number }) {
       )}
       {error && <ErrorMsg msg={error} />}
       {!loading && !error && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 10 }}>
+        /* minmax(8.75rem, 1fr) = minmax(140px, 1fr) — на узких экранах
+           переходит в одну колонку автоматически */
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(8.75rem, 1fr))', gap: '0.625rem' }}>
           {data.map(item => {
             const cfg = PROGRAM_CFG[item.program_name] ?? { color: '#fff', bg: '#555', icon: '◆', label: item.currency }
             return (
               <div key={item.program_name} style={{
-                backgroundColor: cfg.bg, borderRadius: 16,
-                padding: 16, display: 'flex', flexDirection: 'column', gap: 4,
-                // Явно задаём цвет текста для карточки чтобы не наследовать от body
+                backgroundColor: cfg.bg, borderRadius: '1rem',
+                padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem',
                 color: cfg.color,
               }}>
-                <span style={{ fontSize: 22, color: cfg.color, lineHeight: 1 }}>{cfg.icon}</span>
-                <p style={{ fontSize: 11, color: cfg.color, opacity: 0.8, fontWeight: 500 }}>{item.program_name}</p>
-                <p style={{ fontSize: 22, fontWeight: 900, color: cfg.color, letterSpacing: '-0.5px' }}>
+                <span style={{ fontSize: '1.375rem', color: cfg.color, lineHeight: 1 }}>{cfg.icon}</span>
+                <p style={{ fontSize: '0.6875rem', color: cfg.color, opacity: 0.8, fontWeight: 500 }}>{item.program_name}</p>
+                <p style={{ fontSize: '1.375rem', fontWeight: 900, color: cfg.color, letterSpacing: '-0.5px' }}>
                   {item.current_balance.toLocaleString('ru-RU', { maximumFractionDigits: 0 })}
                 </p>
-                <p style={{ fontSize: 11, color: cfg.color, opacity: 0.6 }}>{cfg.label}</p>
+                <p style={{ fontSize: '0.6875rem', color: cfg.color, opacity: 0.6 }}>{cfg.label}</p>
               </div>
             )
           })}
@@ -238,32 +239,32 @@ function ForecastWidget({ userId }: { userId: number }) {
       {loading && <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}><Skeleton height={56} /><Skeleton height={56} /></div>}
       {error && <ErrorMsg msg={error} />}
       {!loading && !error && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {data.map(item => {
             const cfg = PROGRAM_CFG[item.program_name] ?? { color: '#fff', bg: '#555', icon: '◆', label: item.currency }
             return (
               <div key={item.program_name} style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                backgroundColor: 'var(--bg-primary)', borderRadius: 14, padding: '12px 14px',
+                display: 'flex', alignItems: 'center', gap: '0.75rem',
+                backgroundColor: 'var(--bg-primary)', borderRadius: '0.875rem', padding: '0.75rem 0.875rem',
               }}>
                 <div style={{
-                  width: 40, height: 40, borderRadius: 12, flexShrink: 0,
+                  width: '2.5rem', height: '2.5rem', borderRadius: '0.75rem', flexShrink: 0,
                   backgroundColor: cfg.bg, display: 'flex', alignItems: 'center',
-                  justifyContent: 'center', fontSize: 18, fontWeight: 700, color: cfg.color,
+                  justifyContent: 'center', fontSize: '1.125rem', fontWeight: 700, color: cfg.color,
                 }}>
                   {cfg.icon}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 2 }}>
+                  <p style={{ fontSize: '0.6875rem', color: 'var(--text-secondary)', marginBottom: '0.125rem' }}>
                     {item.program_name} · ещё {item.months_left} мес.
                   </p>
-                  <p style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.3px' }}>
+                  <p style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.3px' }}>
                     +{item.forecast_amount.toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {cfg.label}
                   </p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontSize: 10, color: 'var(--text-secondary)' }}>в среднем / мес</p>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
+                  <p style={{ fontSize: '0.625rem', color: 'var(--text-secondary)' }}>в среднем / мес</p>
+                  <p style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                     {item.avg_monthly.toLocaleString('ru-RU', { maximumFractionDigits: 0 })}
                   </p>
                 </div>
@@ -351,35 +352,34 @@ function AIAdviceWidget({ userId }: { userId: number }) {
       {!advice && (
         <button onClick={handleClick} disabled={loading} style={{
           width: '100%', backgroundColor: loading ? '#E5C800' : YELLOW,
-          color: '#000', border: 'none', borderRadius: 14,
-          padding: '14px 20px', fontSize: 14, fontWeight: 700,
+          color: '#000', border: 'none', borderRadius: '0.875rem',
+          padding: '0.875rem 1.25rem', fontSize: '0.875rem', fontWeight: 700,
           cursor: loading ? 'not-allowed' : 'pointer', transition: 'opacity 0.15s',
         }}>
           {loading ? 'Анализирую профиль...' : '✦ Получить персональный совет'}
         </button>
       )}
       {loading && (
-        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <Skeleton height={14} />
-          <Skeleton height={14} width="80%" />
+        <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <Skeleton height={14} /><Skeleton height={14} width="80%" />
         </div>
       )}
-      {error && <div style={{ marginTop: 8 }}><ErrorMsg msg={error} /></div>}
+      {error && <div style={{ marginTop: '0.5rem' }}><ErrorMsg msg={error} /></div>}
       {advice && (
         <div style={{
-          backgroundColor: 'var(--bg-primary)', borderRadius: 14,
-          padding: 16, border: '1px solid var(--border-color)',
+          backgroundColor: 'var(--bg-primary)', borderRadius: '0.875rem',
+          padding: '1rem', border: '1px solid var(--border-color)',
         }}>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
             <div style={{
-              width: 32, height: 32, borderRadius: 10, backgroundColor: YELLOW,
+              width: '2rem', height: '2rem', borderRadius: '0.625rem', backgroundColor: YELLOW,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 14, flexShrink: 0,
+              fontSize: '0.875rem', flexShrink: 0,
             }}>✦</div>
-            <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text-primary)' }}>{advice}</p>
+            <p style={{ fontSize: '0.875rem', lineHeight: 1.6, color: 'var(--text-primary)' }}>{advice}</p>
           </div>
           <button onClick={() => { setAdvice(null); setError(null) }} style={{
-            marginTop: 12, fontSize: 12, color: 'var(--text-secondary)',
+            marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-secondary)',
             background: 'none', border: 'none', cursor: 'pointer', padding: 0,
           }}>
             Обновить совет

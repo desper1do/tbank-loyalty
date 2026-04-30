@@ -10,6 +10,8 @@
  * но до ИИ-советника. Пользователь уже "разогрет" выгодными офферами
  * и достижениями, поэтому предложение продуктов экосистемы воспринимается
  * как следующий логичный шаг, а не как навязчивая реклама в начале экрана.
+ *
+ * Все размеры в rem/em — адаптируется под системный шрифт пользователя.
  */
 
 // ─── Типы ────────────────────────────────────────────────────
@@ -31,10 +33,6 @@ interface Props {
 }
 
 // ─── Данные по сегментам ──────────────────────────────────────
-// Каждый сегмент видит свой набор продуктов:
-// LOW    → базовые продукты для старта: Т-Мобайл (связь = экономия)
-// MEDIUM → продукты для роста: Т-Инвестиции (первые инвестиции)
-// HIGH   → продукты для бизнеса: Т-Бизнес (бизнес-счёт)
 
 const PRODUCTS_BY_SEGMENT: Record<Segment, CrossSellProduct[]> = {
   LOW: [
@@ -123,24 +121,24 @@ export default function CrossSellBlock({ segment }: Props) {
   const products = PRODUCTS_BY_SEGMENT[segment] ?? PRODUCTS_BY_SEGMENT.LOW
 
   return (
-    <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Заголовок */}
       <div>
         <p style={{
-          fontWeight: 700, fontSize: 17,
+          fontWeight: 700, fontSize: '1.25rem',
           color: 'var(--text-primary)',
           letterSpacing: '-0.3px',
-          marginBottom: 4,
+          marginBottom: '0.25rem',
         }}>
           Продукты экосистемы Т
         </p>
-        <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+        <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
           Подобрано специально для вашего уровня
         </p>
       </div>
 
       {/* Карточки продуктов */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
         {products.map((product) => (
           <CrossSellCard key={product.id} product={product} />
         ))}
@@ -156,12 +154,11 @@ function CrossSellCard({ product }: { product: CrossSellProduct }) {
     <div style={{
       display: 'flex',
       alignItems: 'center',
-      gap: 14,
+      gap: '0.875rem',
       backgroundColor: 'var(--bg-primary)',
-      borderRadius: 16,
-      padding: '14px 16px',
+      borderRadius: '1rem',
+      padding: '0.875rem 1rem',
       border: '1px solid var(--border-color)',
-      transition: 'transform 0.15s ease, box-shadow 0.15s ease',
       cursor: 'pointer',
     }}
       onMouseEnter={e => {
@@ -177,16 +174,11 @@ function CrossSellCard({ product }: { product: CrossSellProduct }) {
     >
       {/* Иконка продукта */}
       <div style={{
-        width: 48,
-        height: 48,
-        borderRadius: 14,
+        width: '3rem', height: '3rem',
+        borderRadius: '0.875rem',
         backgroundColor: product.accentColor,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: 22,
-        flexShrink: 0,
-        // Для тёмной темы желтый цвет немного приглушаем через box-shadow
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: '1.375rem', flexShrink: 0,
         boxShadow: product.accentColor === '#FFDD2D'
           ? '0 2px 8px rgba(255,221,45,0.4)'
           : `0 2px 8px ${product.accentColor}40`,
@@ -196,55 +188,42 @@ function CrossSellCard({ product }: { product: CrossSellProduct }) {
 
       {/* Текст */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 2 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.375rem', marginBottom: '0.125rem' }}>
           <p style={{
-            fontWeight: 700,
-            fontSize: 14,
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.2px',
+            fontWeight: 700, fontSize: '0.875rem',
+            color: 'var(--text-primary)', letterSpacing: '-0.2px',
           }}>
             {product.title}
           </p>
           <span style={{
-            fontSize: 11,
-            color: 'var(--text-secondary)',
-            whiteSpace: 'nowrap',
+            fontSize: '0.6875rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap',
           }}>
             {product.subtitle}
           </span>
         </div>
         <p style={{
-          fontSize: 12,
-          color: 'var(--text-secondary)',
-          lineHeight: 1.4,
-          // Обрезаем в 2 строки чтобы не раздувать карточку
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
+          fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.4,
+          display: '-webkit-box', WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>
           {product.description}
         </p>
       </div>
 
-      {/* Кнопка — фиксированная ширина чтобы все кнопки были одной длины */}
+      {/* Кнопка — фиксированная ширина, все кнопки одинаковой длины */}
       <a
         href="#"
         onClick={e => e.preventDefault()}
         style={{
           flexShrink: 0,
-          width: 120,
+          width: '7.5rem',
           backgroundColor: product.accentColor,
           color: product.accentColor === '#FFDD2D' ? '#000' : '#fff',
-          fontSize: 12,
-          fontWeight: 700,
-          padding: '7px 0',
-          borderRadius: 10,
-          textDecoration: 'none',
-          whiteSpace: 'nowrap',
-          textAlign: 'center',
-          display: 'block',
-          transition: 'opacity 0.15s',
+          fontSize: '0.75rem', fontWeight: 700,
+          padding: '0.4375rem 0',
+          borderRadius: '0.625rem',
+          textDecoration: 'none', whiteSpace: 'nowrap',
+          textAlign: 'center', display: 'block',
         }}
         onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.85' }}
         onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1' }}
