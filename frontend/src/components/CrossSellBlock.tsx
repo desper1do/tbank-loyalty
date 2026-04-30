@@ -151,16 +151,20 @@ export default function CrossSellBlock({ segment }: Props) {
 
 function CrossSellCard({ product }: { product: CrossSellProduct }) {
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.875rem',
-      backgroundColor: 'var(--bg-primary)',
-      borderRadius: '1rem',
-      padding: '0.875rem 1rem',
-      border: '1px solid var(--border-color)',
-      cursor: 'pointer',
-    }}
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        flexWrap: 'nowrap',
+        gap: '0.75rem',
+        backgroundColor: 'var(--bg-primary)',
+        borderRadius: '1rem',
+        padding: '0.75rem 0.875rem',
+        border: '1px solid var(--border-color)',
+        cursor: 'pointer',
+        overflow: 'hidden',
+      }}
       onMouseEnter={e => {
         const el = e.currentTarget as HTMLDivElement
         el.style.transform = 'translateY(-1px)'
@@ -172,13 +176,16 @@ function CrossSellCard({ product }: { product: CrossSellProduct }) {
         el.style.boxShadow = 'none'
       }}
     >
-      {/* Иконка продукта */}
+      {/* Иконка — фиксированный размер 3.5rem (56px), не сжимается */}
       <div style={{
-        width: '3rem', height: '3rem',
+        width: '3.5rem',
+        height: '3.5rem',
+        minWidth: '3.5rem',
+        flexShrink: 0,
         borderRadius: '0.875rem',
         backgroundColor: product.accentColor,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: '1.375rem', flexShrink: 0,
+        fontSize: '1.375rem',
         boxShadow: product.accentColor === '#FFDD2D'
           ? '0 2px 8px rgba(255,221,45,0.4)'
           : `0 2px 8px ${product.accentColor}40`,
@@ -186,44 +193,57 @@ function CrossSellCard({ product }: { product: CrossSellProduct }) {
         {product.icon}
       </div>
 
-      {/* Текст */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.375rem', marginBottom: '0.125rem' }}>
-          <p style={{
-            fontWeight: 700, fontSize: '0.875rem',
-            color: 'var(--text-primary)', letterSpacing: '-0.2px',
-          }}>
-            {product.title}
-          </p>
-          <span style={{
-            fontSize: '0.6875rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap',
-          }}>
-            {product.subtitle}
-          </span>
-        </div>
+      {/* Текст — растягивается, обрезается если не влезает */}
+      <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
         <p style={{
-          fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.4,
-          display: '-webkit-box', WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          fontWeight: 700,
+          fontSize: '0.875rem',
+          color: 'var(--text-primary)',
+          letterSpacing: '-0.2px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          marginBottom: '0.0625rem',
+        }}>
+          {product.title}
+        </p>
+        <p style={{
+          fontSize: '0.6875rem',
+          color: 'var(--text-secondary)',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          marginBottom: '0.125rem',
+        }}>
+          {product.subtitle}
+        </p>
+        <p style={{
+          fontSize: '0.75rem',
+          color: 'var(--text-secondary)',
+          lineHeight: 1.4,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
         }}>
           {product.description}
         </p>
       </div>
 
-      {/* Кнопка — фиксированная ширина, все кнопки одинаковой длины */}
+      {/* Кнопка — не сжимается, ширина по контенту */}
       <a
         href="#"
         onClick={e => e.preventDefault()}
         style={{
           flexShrink: 0,
-          width: '7.5rem',
           backgroundColor: product.accentColor,
           color: product.accentColor === '#FFDD2D' ? '#000' : '#fff',
-          fontSize: '0.75rem', fontWeight: 700,
-          padding: '0.4375rem 0',
+          fontSize: '0.75rem',
+          fontWeight: 700,
+          padding: '0.4375rem 0.75rem',
           borderRadius: '0.625rem',
-          textDecoration: 'none', whiteSpace: 'nowrap',
-          textAlign: 'center', display: 'block',
+          textDecoration: 'none',
+          whiteSpace: 'nowrap',
+          display: 'block',
         }}
         onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.85' }}
         onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1' }}
