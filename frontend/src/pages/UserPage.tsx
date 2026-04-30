@@ -307,7 +307,7 @@ function OffersWidget({ userId }: { userId: number }) {
             }}>
               <img
                 src={offer.logo_url} alt={offer.partner_name}
-                style={{ width: 40, height: 40, borderRadius: 10, objectFit: 'cover', marginBottom: 10, backgroundColor: 'rgba(255,255,255,0.2)' }}
+                style={{ width: 40, height: 40, borderRadius: 10, objectFit: 'contain', marginBottom: 10, mixBlendMode: 'multiply' }}
                 onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
               />
               <div>
