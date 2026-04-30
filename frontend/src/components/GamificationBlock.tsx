@@ -158,8 +158,9 @@ export default function GamificationBlock({ userId }: Props) {
 
       {/* Уже максимум */}
       {data.next_level === null && (
-        <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "#FFDD2D" }}>
-          👑 Вы на максимальном уровне HIGH
+        <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "0.375rem" }}>
+          <span style={{ lineHeight: 1 }}>👑</span>
+          <span>Вы на максимальном уровне <span style={{ color: "#FFDD2D" }}>HIGH</span></span>
         </p>
       )}
     </div>
