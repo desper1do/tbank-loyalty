@@ -219,7 +219,7 @@ export default function HomePage() {
               <Avatar name={user.full_name} />
               
               <div className="flex-1 min-w-0 flex flex-col gap-1">
-                <p className="font-bold text-base truncate pr-2" style={{ color: 'var(--text-primary)' }}>
+                <p className="font-bold text-lg truncate pr-2" style={{ color: 'var(--text-primary)' }}>
                   {user.full_name}
                 </p>
                 <p className="text-sm truncate opacity-60" style={{ color: 'var(--text-secondary)' }}>
