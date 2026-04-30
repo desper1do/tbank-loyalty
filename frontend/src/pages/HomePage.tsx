@@ -183,7 +183,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="w-full flex flex-col items-center px-6 py-10">
+      <main className="w-full flex flex-col items-center" style={{ padding: '40px 16px', boxSizing: 'border-box' }}>
         <div className="w-full max-w-7xl text-left">
           <h1 className="font-bold mb-1"
             style={{ fontSize: '32px', color: 'var(--text-primary)', letterSpacing: '-0.8px' }}>
@@ -195,9 +195,9 @@ export default function HomePage() {
         </div>
 
         <div className="w-full max-w-7xl grid gap-5"
-          style={{ 
-            gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))',
-            paddingTop: '8px' 
+          style={{
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(380px, 100%), 1fr))',
+            paddingTop: '8px'
           }}>
           
           {loading && Array.from({ length: 9 }).map((_, i) => <CardSkeleton key={i} />)}
