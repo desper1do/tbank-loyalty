@@ -1,5 +1,4 @@
-// Android emulator: 10.0.2.2 | Real device/APK: замени на IP машины или deployed URL
-const API = "http://10.0.2.2:8000";
+const API = process.env.EXPO_PUBLIC_API_URL ?? "http://tbank-loyalty.desp-dev.ru/api";
 
 export async function fetchUsers() {
   const r = await fetch(`${API}/users/`);
