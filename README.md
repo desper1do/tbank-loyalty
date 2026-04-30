@@ -123,12 +123,15 @@
 ### Мобильное приложение
 
 **Выбор пользователя**
+
 <img src="screenshots/mobile-users-dark.png.jpg" width="320"/>
 
 **Экран лояльности: балансы**
+
 <img src="screenshots/mobile-dashboard-dark.png.jpg" width="320"/>
 
 **Прогноз и офферы**
+
 <img src="screenshots/mobile-forecast-offers-dark.png.jpg" width="320"/>
 
 ---
