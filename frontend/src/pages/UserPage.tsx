@@ -369,7 +369,7 @@ function AIAdviceWidget({ userId }: { userId: number }) {
       <WidgetTitle>ИИ-советник</WidgetTitle>
       {!advice && !loading && (
         <button onClick={handleClick} style={{
-          width: '100%', backgroundColor: loading ? '#E5C800' : YELLOW,
+          width: '100%', backgroundColor: YELLOW,
           color: '#000', border: 'none', borderRadius: '0.875rem',
           padding: '0.875rem 1.25rem', fontSize: '0.875rem', fontWeight: 700,
           cursor: loading ? 'not-allowed' : 'pointer', transition: 'opacity 0.15s',
