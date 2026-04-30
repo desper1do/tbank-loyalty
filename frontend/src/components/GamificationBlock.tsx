@@ -109,7 +109,7 @@ export default function GamificationBlock({ userId }: Props) {
             display: "flex",
             flexDirection: "row",
             overflowX: "auto",
-            gap: "0.75rem",
+            gap: "8px",
             paddingBottom: "0.5rem",
             scrollbarWidth: "none",
           }}
@@ -122,9 +122,9 @@ export default function GamificationBlock({ userId }: Props) {
                 display: "flex", flexDirection: "column",
                 alignItems: "center", justifyContent: "center",
                 borderRadius: "1rem",
-                minWidth: "80px", maxWidth: "80px", flexShrink: 0,
+                flex: "1 1 0",
                 minHeight: "5.5rem", padding: "0.625rem 0.375rem",
-                fontSize: "1.75rem",
+                fontSize: "2rem",
                 backgroundColor: badge.earned ? "#FFDD2D" : "var(--bg-primary)",
                 opacity: badge.earned ? 1 : 0.45,
                 filter: badge.earned ? "none" : "grayscale(1)",
@@ -132,9 +132,9 @@ export default function GamificationBlock({ userId }: Props) {
                 cursor: "default",
               }}
             >
-              <span style={{ lineHeight: 1 }}>{badge.icon}</span>
+              <span style={{ lineHeight: 1, fontSize: "2rem" }}>{badge.icon}</span>
               <span style={{
-                fontSize: "0.625rem", marginTop: "0.375rem", fontWeight: 600, textAlign: "center",
+                fontSize: "0.6875rem", marginTop: "0.375rem", fontWeight: 600, textAlign: "center",
                 lineHeight: 1.25, width: "100%",
                 color: badge.earned ? "#000" : "var(--text-secondary)",
                 wordBreak: "break-word",
