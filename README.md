@@ -123,13 +123,13 @@
 ### Мобильное приложение
 
 **Выбор пользователя**
-![Мобилка — выбор](screenshots/mobile-users-dark.png.jpg)
+<img src="screenshots/mobile-users-dark.png.jpg" width="320"/>
 
 **Экран лояльности: балансы**
-![Мобилка — лояльность](screenshots/mobile-dashboard-dark.png.jpg)
+<img src="screenshots/mobile-dashboard-dark.png.jpg" width="320"/>
 
 **Прогноз и офферы**
-![Мобилка — прогноз и офферы](screenshots/mobile-forecast-offers-dark.png.jpg)
+<img src="screenshots/mobile-forecast-offers-dark.png.jpg" width="320"/>
 
 ---
 
