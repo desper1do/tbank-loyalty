@@ -108,31 +108,28 @@
 
 ### Веб-приложение
 
-**Выбор пользователя (тёмная тема)**
-![Выбор пользователя](screenshots/web-users-dark.png)
+**Выбор пользователя**
+![Выбор пользователя](screenshots/web-users-dark.png.jpg)
 
-**Балансы + график истории кэшбэка (тёмная тема)**
+**Балансы + график истории кэшбэка**
 ![Балансы и график](screenshots/web-dashboard-dark.png)
 
-**Прогноз выгоды до конца года (тёмная тема)**
+**Прогноз выгоды до конца года**
 ![Прогноз](screenshots/web-forecast-dark.png)
 
-**ИИ-советник с персональным ответом (тёмная тема)**
+**ИИ-советник с персональным ответом**
 ![ИИ-советник](screenshots/web-ai-dark.png)
-
-**Офферы партнёров + кросс-селл (тёмная тема)**
-![Офферы](screenshots/web-offers-crosssell-dark.png)
-
-**Геймификация: стрик, бейджи, прогресс (тёмная тема)**
-![Геймификация](screenshots/web-gamification-dark.png)
-
-**Светлая тема**
-![Светлая тема](screenshots/web-dashboard-light.png)
 
 ### Мобильное приложение
 
-**Экран лояльности (тёмная тема)**
-![Мобилка](screenshots/mobile-dashboard-dark.png)
+**Выбор пользователя**
+![Мобилка — выбор](screenshots/mobile-users-dark.png.jpg)
+
+**Экран лояльности: балансы**
+![Мобилка — лояльность](screenshots/mobile-dashboard-dark.png.jpg)
+
+**Прогноз и офферы**
+![Мобилка — прогноз и офферы](screenshots/mobile-forecast-offers-dark.png.jpg)
 
 ---
 
