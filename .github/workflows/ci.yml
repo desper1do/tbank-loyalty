@@ -46,3 +46,21 @@ jobs:
         run: |
           cd frontend
           npm run build
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ backend-tests, frontend-lint ]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: nexa
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/tbank-loyalty
+            git pull origin main
+            sudo docker-compose down
+            sudo docker-compose up -d --build
+            docker system prune -f
