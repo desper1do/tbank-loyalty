@@ -166,19 +166,19 @@ def get_user_gamification(user_id: int):
 
 
 @router.post("/{user_id}/ai-advice", response_model=AIAdviceResponse)
-def get_ai_advice(user_id: int):
+def get_ai_advice(user_id: int, refresh: bool = False):
     """
     Генерирует ИИ-совет по профилю пользователя с помощью GigaChat.
+    При refresh=true игнорирует кэш и запрашивает новый совет.
     """
-    # Проверка: существует ли пользователь
     if user_id not in users_df["id"].values:
         raise HTTPException(
             status_code=404,
             detail=f"Пользователь с id={user_id} не найден",
         )
-    
+
     try:
-        advice_text = generate_ai_advice(user_id)
+        advice_text = generate_ai_advice(user_id, refresh=refresh)
         return AIAdviceResponse(advice=advice_text)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))

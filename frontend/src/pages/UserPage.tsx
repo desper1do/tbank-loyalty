@@ -350,21 +350,25 @@ function AIAdviceWidget({ userId }: { userId: number }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleClick = () => {
-    if (advice) return
+  const fetchAdvice = (refresh = false) => {
     setLoading(true)
     setError(null)
-    fetchAIAdvice(userId)
+    fetchAIAdvice(userId, refresh)
       .then(res => setAdvice(res.advice))
       .catch(e => setError(e.message))
       .finally(() => setLoading(false))
   }
 
+  const handleClick = () => {
+    if (advice) return
+    fetchAdvice()
+  }
+
   return (
     <Card>
       <WidgetTitle>ИИ-советник</WidgetTitle>
-      {!advice && (
-        <button onClick={handleClick} disabled={loading} style={{
+      {!advice && !loading && (
+        <button onClick={handleClick} style={{
           width: '100%', backgroundColor: loading ? '#E5C800' : YELLOW,
           color: '#000', border: 'none', borderRadius: '0.875rem',
           padding: '0.875rem 1.25rem', fontSize: '0.875rem', fontWeight: 700,
@@ -373,7 +377,7 @@ function AIAdviceWidget({ userId }: { userId: number }) {
           {loading ? 'Анализирую профиль...' : '✦ Получить персональный совет'}
         </button>
       )}
-      {loading && (
+      {loading && !advice && (
         <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <Skeleton height={14} /><Skeleton height={14} width="80%" />
         </div>
@@ -434,11 +438,11 @@ function AIAdviceWidget({ userId }: { userId: number }) {
               </ReactMarkdown>
             </div>
           </div>
-          <button onClick={() => { setAdvice(null); setError(null) }} style={{
+          <button onClick={() => fetchAdvice(true)} disabled={loading} style={{
             marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-secondary)',
-            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            background: 'none', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', padding: 0,
           }}>
-            Обновить совет
+            {loading ? 'Обновляю...' : 'Обновить совет'}
           </button>
         </div>
       )}

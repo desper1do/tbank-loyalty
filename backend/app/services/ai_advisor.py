@@ -42,9 +42,10 @@ _SEGMENT_CONTEXT = {
 _advice_cache: dict[int, str] = {}
 
 
-def get_ai_advice(user_id: int) -> str:
-    if user_id in _advice_cache:
+def get_ai_advice(user_id: int, refresh: bool = False) -> str:
+    if not refresh and user_id in _advice_cache:
         return _advice_cache[user_id]
+    _advice_cache.pop(user_id, None)
 
     api_key = os.getenv("GIGACHAT_CREDENTIALS")
     if not api_key:

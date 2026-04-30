@@ -119,8 +119,10 @@ export async function fetchGamification(userId: number): Promise<GamificationDat
   return data
 }
 
-/** ИИ-совет — POST-запрос, триггерится по кнопке */
-export async function fetchAIAdvice(userId: number): Promise<AIAdviceResponse> {
-  const { data } = await api.post<AIAdviceResponse>(`/users/${userId}/ai-advice`)
+/** ИИ-совет — POST-запрос, триггерится по кнопке. refresh=true сбрасывает кэш на бэкенде */
+export async function fetchAIAdvice(userId: number, refresh = false): Promise<AIAdviceResponse> {
+  const { data } = await api.post<AIAdviceResponse>(`/users/${userId}/ai-advice`, null, {
+    params: refresh ? { refresh: true } : undefined,
+  })
   return data
 }
