@@ -101,8 +101,14 @@ export default function GamificationBlock({ userId }: Props) {
         <p style={{ fontSize: "0.6875rem", color: "var(--text-secondary)", marginBottom: "0.75rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
           Бейджи
         </p>
-        {/* ::-webkit-scrollbar не работает в инлайн-стилях — используем класс */}
-        <style>{`.badges-scroll::-webkit-scrollbar { display: none; }`}</style>
+        {/* медиа-запрос и псевдоэлементы — только через класс, не инлайн */}
+        <style>{`
+          .badges-scroll::-webkit-scrollbar { display: none; }
+          .badge-item { flex: 1 1 0; }
+          @media (max-width: 480px) {
+            .badge-item { flex: none; min-width: 80px; max-width: 80px; flex-shrink: 0; }
+          }
+        `}</style>
         <div
           className="badges-scroll"
           style={{
@@ -118,11 +124,11 @@ export default function GamificationBlock({ userId }: Props) {
             <div
               key={badge.id}
               title={badge.description}
+              className="badge-item"
               style={{
                 display: "flex", flexDirection: "column",
                 alignItems: "center", justifyContent: "center",
                 borderRadius: "1rem",
-                flex: "1 1 0",
                 minHeight: "5.5rem", padding: "0.625rem 0.375rem",
                 fontSize: "2rem",
                 backgroundColor: badge.earned ? "#FFDD2D" : "var(--bg-primary)",
