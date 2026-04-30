@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+/* =============================================
+   TinkoffSans — фирменный шрифт Т-Банка
+   Файлы лежат в: src/assets/fonts/
+   ============================================= */
+@font-face {
+  font-family: 'TinkoffSans';
+  src: url('./assets/fonts/TinkoffSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap; /* страница не ждёт загрузки — показывает fallback сразу */
+}
+
+@font-face {
+  font-family: 'TinkoffSans';
+  src: url('./assets/fonts/TinkoffSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Tailwind v4: включаем dark mode через класс .dark на <html> */
 @variant dark (&:where(.dark, .dark *));
 
@@ -53,7 +73,8 @@ button, a, [role="button"] {
 }
 
 body {
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  /* TinkoffSans → Inter как запасной → системный sans-serif */
+  font-family: 'TinkoffSans', Inter, system-ui, -apple-system, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: background-color 0.2s, color 0.2s;
