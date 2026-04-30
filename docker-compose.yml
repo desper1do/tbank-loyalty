@@ -7,9 +7,10 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/backend
+    env_file:
+      - ./backend/.env
     environment:
       - PYTHONPATH=/backend
-      - GIGACHAT_CREDENTIALS=${GIGACHAT_CREDENTIALS}
 
   frontend:
     build: ./frontend

@@ -4,6 +4,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer
@@ -330,6 +331,19 @@ function OffersWidget({ userId }: { userId: number }) {
   )
 }
 
+// Конвертирует LaTeX-нотацию ($...$) в читаемый текст и сохраняет markdown
+function preprocessAdvice(text: string): string {
+  return text
+    // $12\%$ → 12%  (и другие inline math блоки)
+    .replace(/\$([^$]+)\$/g, (_match, inner) =>
+      inner
+        .replace(/\\%/g, '%')
+        .replace(/\\,/g, ' ')
+        .replace(/\\cdot/g, '·')
+        .replace(/\\/g, '')
+    )
+}
+
 // ─── Виджет 7: ИИ-советник ──────────────────────────────────
 function AIAdviceWidget({ userId }: { userId: number }) {
   const [advice, setAdvice] = useState<string | null>(null)
@@ -376,7 +390,49 @@ function AIAdviceWidget({ userId }: { userId: number }) {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '0.875rem', flexShrink: 0,
             }}>✦</div>
-            <p style={{ fontSize: '0.875rem', lineHeight: 1.6, color: 'var(--text-primary)' }}>{advice}</p>
+            <div style={{ fontSize: '0.875rem', lineHeight: 1.7, color: 'var(--text-primary)' }}
+              className="ai-advice-body">
+              <ReactMarkdown
+                components={{
+                  strong: ({ children }) => (
+                    <strong style={{ color: YELLOW, fontWeight: 700 }}>{children}</strong>
+                  ),
+                  em: ({ children }) => (
+                    <em style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>{children}</em>
+                  ),
+                  p: ({ children }) => (
+                    <p style={{ margin: '0 0 0.5rem 0' }}>{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul style={{ paddingLeft: '1.25rem', margin: '0.25rem 0' }}>{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol style={{ paddingLeft: '1.25rem', margin: '0.25rem 0' }}>{children}</ol>
+                  ),
+                  li: ({ children }) => (
+                    <li style={{ marginBottom: '0.25rem' }}>{children}</li>
+                  ),
+                  a: ({ href, children }) => (
+                    <a href={href} style={{ color: YELLOW, textDecoration: 'underline' }}
+                      target="_blank" rel="noopener noreferrer">{children}</a>
+                  ),
+                  code: ({ children }) => (
+                    <code style={{
+                      backgroundColor: 'var(--bg-secondary)', borderRadius: '0.25rem',
+                      padding: '0.1em 0.35em', fontSize: '0.8em', fontFamily: 'monospace',
+                    }}>{children}</code>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote style={{
+                      borderLeft: `3px solid ${YELLOW}`, paddingLeft: '0.75rem',
+                      margin: '0.5rem 0', color: 'var(--text-secondary)',
+                    }}>{children}</blockquote>
+                  ),
+                }}
+              >
+                {preprocessAdvice(advice)}
+              </ReactMarkdown>
+            </div>
           </div>
           <button onClick={() => { setAdvice(null); setError(null) }} style={{
             marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-secondary)',
